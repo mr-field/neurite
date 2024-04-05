@@ -95,7 +95,7 @@ def slices(slices_in,           # the 2D slices
 
         # get row and column axes
         row_axs = axs if rows == 1 else axs[row]
-        ax = row_axs[col]
+        ax = row_axs[col] if cols > 1 else row_axs
 
         # turn off axis
         if axes_off:
