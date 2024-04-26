@@ -105,7 +105,8 @@ def unet(nb_features,
          add_prior_layer_reg=0,
          layer_nb_feats=None,
          conv_dropout=0,
-         batch_norm=None):
+         batch_norm=None,
+         convL=None):  # conv layer function
     """
     unet-style keras model with an overdose of parametrization.
 
@@ -207,7 +208,8 @@ def unet(nb_features,
                          conv_dropout=conv_dropout,
                          batch_norm=batch_norm,
                          src=src,
-                         src_input=src_input)
+                         src_input=src_input,
+                         convL=convL)
 
     # get decoder
     # use_skip_connections=1 makes it a u-net
@@ -232,7 +234,8 @@ def unet(nb_features,
                  batch_norm=batch_norm,
                  layer_nb_feats=lnf,
                  conv_dropout=conv_dropout,
-                 input_model=enc_model)
+                 input_model=enc_model,
+                 convL=convL)
 
     final_model = dec_model
     if add_prior_layer:
@@ -274,7 +277,8 @@ def ae(nb_features,
        final_pred_activation='softmax',
        src=None,
        src_input=None,
-       do_vae=False):
+       do_vae=False,
+       convL=None):  # conv layer function
     """
     Convolutional Auto-Encoder.
     Optionally Variational.
@@ -315,7 +319,8 @@ def ae(nb_features,
                          conv_dropout=conv_dropout,
                          batch_norm=batch_norm,
                          src=src,
-                         src_input=src_input)
+                         src_input=src_input,
+                         convL=convL)
 
     # middle AE structure
     if single_model:
@@ -358,7 +363,8 @@ def ae(nb_features,
                          nb_conv_per_level=nb_conv_per_level,
                          batch_norm=batch_norm,
                          conv_dropout=conv_dropout,
-                         input_model=in_model)
+                         input_model=in_model,
+                         convL=convL)
 
     if add_prior_layer:
         dec_model = add_prior(dec_model,
