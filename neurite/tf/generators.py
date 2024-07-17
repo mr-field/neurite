@@ -30,7 +30,7 @@ import numpy as np
 import nibabel as nib
 import scipy
 from tensorflow.python.keras.utils import np_utils
-from tensorflow.keras.models import Model
+from keras.models import Model
 
 # local packages
 import pystrum.pynd.ndutils as nd

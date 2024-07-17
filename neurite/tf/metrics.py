@@ -21,21 +21,18 @@ the License.
 """
 
 # core python
-import sys
 import warnings
 
 # third party
 import numpy as np
 import tensorflow as tf
-import tensorflow.keras.backend as K
-from tensorflow.keras import losses
-# simple metrics renamed mae -> l1, mse -> l2
-from tensorflow.keras.losses import mean_absolute_error as l1
-from tensorflow.keras.losses import mean_squared_error as l2
+import keras.backend as K
+
+from keras.losses import CategoricalCrossentropy as cc
+from keras.losses import MeanSquaredError
 
 # local
 import neurite as ne
-from . import utils
 
 
 class MutualInformation:
@@ -616,7 +613,7 @@ class HardDice(Dice):
                          normalize=normalize)
 
 
-class CategoricalCrossentropy(tf.keras.losses.CategoricalCrossentropy):
+class CategoricalCrossentropy(cc):
 
     def __init__(self, label_weights=None, **kwargs):
         """
@@ -650,7 +647,7 @@ class CategoricalCrossentropy(tf.keras.losses.CategoricalCrossentropy):
         return super().__call__(y_true, y_pred, sample_weight=sample_weight)
 
 
-class MeanSquaredErrorProb(tf.keras.losses.MeanSquaredError):
+class MeanSquaredErrorProb(MeanSquaredError):
 
     def __init__(self, label_weights=None, **kwargs):
         """

@@ -27,9 +27,10 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-import tensorflow.keras.layers as KL
-from tensorflow.keras.models import Model
-import tensorflow.keras.backend as K
+import keras
+import keras.layers as KL
+from keras.models import Model
+import keras.backend as K
 from tensorflow.python.keras.constraints import maxnorm
 
 # local
@@ -427,7 +428,7 @@ def add_prior(input_model,
     if final_pred_activation == 'softmax':
         assert use_logp, 'cannot do softmax when adding prior via P()'
         print("using final_pred_activation %s for %s" % (final_pred_activation, model_name))
-        softmax_lambda_fcn = lambda x: tf.keras.activations.softmax(x, axis=-1)
+        softmax_lambda_fcn = lambda x: keras.activations.softmax(x, axis=-1)
         pred_tensor = KL.Lambda(softmax_lambda_fcn, name=pred_name)(post_tensor)
 
     else:
@@ -559,8 +560,8 @@ def single_ae(enc_size,
         # encoding layer
         if ae_type == 'dense':
             name = '%s_ae_sigma_enc_dense_%s' % (prefix, enc_size_str)
-            #    kernel_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=1e-5),
-            #    bias_initializer=tf.keras.initializers.RandomNormal(mean=-5.0, stddev=1e-5)
+            #    kernel_initializer=keras.initializers.RandomNormal(mean=0.0, stddev=1e-5),
+            #    bias_initializer=keras.initializers.RandomNormal(mean=-5.0, stddev=1e-5)
             last_tensor = KL.Dense(enc_size[0], name=name)(pre_enc_layer)
 
         else:
@@ -920,7 +921,7 @@ def labels_to_image_old(
     if return_def:
         outputs.append(def_field)
 
-    return tf.keras.Model(labels_input, outputs, name=f'synth_{id}')
+    return keras.Model(labels_input, outputs, name=f'synth_{id}')
 
 
 def labels_to_image_new(*args, **kwargs):
@@ -1070,7 +1071,7 @@ def labels_to_image(
     import voxelmorph as vxm
 
     # Compute type.
-    compute_type = tf.keras.mixed_precision.global_policy().compute_dtype
+    compute_type = keras.mixed_precision.global_policy().compute_dtype
     compute_type = tf.dtypes.as_dtype(compute_type)
     integer_type = tf.int32
 
@@ -1085,7 +1086,7 @@ def labels_to_image(
     # Input model.
     if input_model is None:
         labels = KL.Input(shape=(*in_shape, 1), name=f'input_{id}', dtype=compute_type)
-        input_model = tf.keras.Model(*[labels] * 2)
+        input_model = keras.Model(*[labels] * 2)
     labels = input_model.output
     if labels.dtype != compute_type:
         labels = tf.cast(labels, compute_type)
@@ -1310,7 +1311,7 @@ def labels_to_image(
         outputs.append(bias_field)
 
     assert not seeds, f'unknown seeds {seeds}'
-    return tf.keras.Model(input_model.inputs, outputs)
+    return keras.Model(input_model.inputs, outputs)
 
 
 ###############################################################################
@@ -1613,7 +1614,7 @@ def conv_dec(nb_features,
     if final_pred_activation == 'softmax':
         print("using final_pred_activation %s for %s" % (final_pred_activation, model_name))
         name = '%s_prediction' % prefix
-        softmax_lambda_fcn = lambda x: tf.keras.activations.softmax(x, axis=ndims + 1)
+        softmax_lambda_fcn = lambda x: keras.activations.softmax(x, axis=ndims + 1)
         pred_tensor = KL.Lambda(softmax_lambda_fcn, name=name)(last_tensor)
 
     # otherwise create a layer that does nothing.
@@ -1855,7 +1856,7 @@ def EncoderNet(nb_features,
     if (rescale is not None):
         dense = layers.RescaleValues(rescale)(dense)
     out = KL.Dense(nb_labels, name='output_dense', activation=final_activation)(dense)
-    model = tf.keras.models.Model(inputs=enc_model.inputs, outputs=out)
+    model = keras.models.Model(inputs=enc_model.inputs, outputs=out)
 
     return model
 
@@ -1873,8 +1874,8 @@ def DenseLayerNet(inshape, layer_sizes, nb_labels=2, activation='relu',
     inputs = KL.Input(shape=inshape, name='input')
     prev_layer = KL.Flatten(name='flat_inputs')(inputs)
     # to prevent overfitting include some kernel and bias regularization
-    kreg = tf.kerasregularizers.l1_l2(l1=1e-5, l2=1e-4)
-    breg = tf.kerasregularizers.l2(1e-4)
+    kreg = keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
+    breg = keras.regularizers.l2(1e-4)
 
     # connect the list of dense layers to each other
     for lno, layer_size in enumerate(layer_sizes):
@@ -1888,7 +1889,7 @@ def DenseLayerNet(inshape, layer_sizes, nb_labels=2, activation='relu',
     # tie the previous dense layer to a onehot encoded output layer
     last_layer = KL.Dense(nb_labels, name='last_dense', activation=final_activation)(prev_layer)
 
-    model = tf.kerasmodels.Model(inputs=inputs, outputs=last_layer)
+    model = keras.models.Model(inputs=inputs, outputs=last_layer)
     return model
 
 

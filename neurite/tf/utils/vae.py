@@ -31,11 +31,11 @@ try:
 except Exception as e:
     warnings.warn(str(e))  # avoiding https://github.com/scikit-learn/scikit-learn/issues/14485
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import backend as K
+from keras import backend as K
 from tqdm import tqdm as tqdm
-from tensorflow.keras import layers as KL
-from tensorflow.keras.utils import plot_model
+from keras import layers as KL
+from keras.utils import plot_model
+from keras import Model
 import matplotlib.pyplot as plt
 
 # project imports
@@ -51,7 +51,7 @@ def extract_z_dec(model, sample_layer_name, vis=False, wt_chk=False):
     """
 
     # need to make new model to avoid mu, sigma outputs
-    tmp_model = keras.models.Model(model.inputs, model.outputs[0])
+    tmp_model = Model(model.inputs, model.outputs[0])
 
     # get new input
     sample_layer = model.get_layer(sample_layer_name)
@@ -67,7 +67,7 @@ def extract_z_dec(model, sample_layer_name, vis=False, wt_chk=False):
                                              input_layers=input_layers)
 
     # get new model
-    z_dec_model = keras.models.Model(new_inputs, z_dec_model_outs)
+    z_dec_model = Model(new_inputs, z_dec_model_outs)
 
     if vis:
         outfile = NamedTemporaryFile().name + '.png'
@@ -211,7 +211,7 @@ def sweep_dec_given_x(full_model, z_dec_model, sample1, sample2, sample_layer_na
     # get a model that also outputs the samples z
     full_output = [*full_model.outputs,
                    full_model.get_layer(sample_layer_name).get_output_at(1)]
-    full_model_plus = keras.models.Model(full_model.inputs, full_output)
+    full_model_plus = Model(full_model.inputs, full_output)
 
     # get full predictions for these samples
     pred1 = full_model_plus.predict(sample1[0])
@@ -273,7 +273,7 @@ def pca_init_dense(model, mu_dense_layer_name, undense_layer_name, generator,
     for i in range(nb_inbound_nodes):
         try:
             out_tensor = mu_dense_layer.get_input_at(i)
-            pre_mu_model = keras.models.Model(model.inputs, out_tensor)
+            pre_mu_model = Model(model.inputs, out_tensor)
 
             # save the node index
             node_idx = i
@@ -362,7 +362,7 @@ def model_output_pca(pre_mu_model, generator, nb_samples, nb_components,
     den_o = den(inp)
     unden = KL.Dense(pca.mean_.shape[0])
     unden_o = unden(den_o)
-    test_ae = keras.models.Model(inp, [den_o, unden_o])
+    test_ae = Model(inp, [den_o, unden_o])
 
     den.set_weights([np.transpose(W), - x_mu])
     unden.set_weights([W, + pca.mean_])

@@ -28,8 +28,9 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Layer, InputLayer, Input, InputSpec
+import keras
+from keras import backend as K
+from keras.layers import Layer, InputLayer, Input, InputSpec
 
 # keras internal utils
 from tensorflow.python.keras.utils import conv_utils
@@ -935,15 +936,15 @@ class LocallyConnected3D(Layer):
             raise ValueError('Invalid border mode for LocallyConnected3D '
                              '(only "valid" is supported if implementation is 1): ' + padding)
         self.data_format = conv_utils.normalize_data_format(data_format)
-        self.activation = tf.keras.activations.get(activation)
+        self.activation = keras.activations.get(activation)
         self.use_bias = use_bias
-        self.kernel_initializer = tf.keras.initializers.get(kernel_initializer)
-        self.bias_initializer = tf.keras.initializers.get(bias_initializer)
-        self.kernel_regularizer = tf.keras.regularizers.get(kernel_regularizer)
-        self.bias_regularizer = tf.keras.regularizers.get(bias_regularizer)
-        self.activity_regularizer = tf.keras.regularizers.get(activity_regularizer)
-        self.kernel_constraint = tf.keras.constraints.get(kernel_constraint)
-        self.bias_constraint = tf.keras.constraints.get(bias_constraint)
+        self.kernel_initializer = keras.initializers.get(kernel_initializer)
+        self.bias_initializer = keras.initializers.get(bias_initializer)
+        self.kernel_regularizer = keras.regularizers.get(kernel_regularizer)
+        self.bias_regularizer = keras.regularizers.get(bias_regularizer)
+        self.activity_regularizer = keras.regularizers.get(activity_regularizer)
+        self.kernel_constraint = keras.constraints.get(kernel_constraint)
+        self.bias_constraint = keras.constraints.get(bias_constraint)
         self.implementation = implementation
         self.input_spec = InputSpec(ndim=5)
 
@@ -1108,15 +1109,15 @@ class LocallyConnected3D(Layer):
             'strides': self.strides,
             'padding': self.padding,
             'data_format': self.data_format,
-            'activation': tf.keras.activations.serialize(self.activation),
+            'activation': keras.activations.serialize(self.activation),
             'use_bias': self.use_bias,
-            'kernel_initializer': tf.keras.initializers.serialize(self.kernel_initializer),
-            'bias_initializer': tf.keras.initializers.serialize(self.bias_initializer),
-            'kernel_regularizer': tf.keras.regularizers.serialize(self.kernel_regularizer),
-            'bias_regularizer': tf.keras.regularizers.serialize(self.bias_regularizer),
-            'activity_regularizer': tf.keras.regularizers.serialize(self.activity_regularizer),
-            'kernel_constraint': tf.keras.constraints.serialize(self.kernel_constraint),
-            'bias_constraint': tf.keras.constraints.serialize(self.bias_constraint),
+            'kernel_initializer': keras.initializers.serialize(self.kernel_initializer),
+            'bias_initializer': keras.initializers.serialize(self.bias_initializer),
+            'kernel_regularizer': keras.regularizers.serialize(self.kernel_regularizer),
+            'bias_regularizer': keras.regularizers.serialize(self.bias_regularizer),
+            'activity_regularizer': keras.regularizers.serialize(self.activity_regularizer),
+            'kernel_constraint': keras.constraints.serialize(self.kernel_constraint),
+            'bias_constraint': keras.constraints.serialize(self.bias_constraint),
             'implementation': self.implementation
         }
         base_config = super(LocallyConnected3D, self).get_config()
@@ -1567,7 +1568,7 @@ class LocalCrossLinear(Layer):
         if self.mult_initializer is None:
             mean = 1 / input_shape[-1]
             stddev = 0.01
-            self.mult_initializer = tf.keras.initializers.RandomNormal(mean=mean, stddev=stddev)
+            self.mult_initializer = keras.initializers.RandomNormal(mean=mean, stddev=stddev)
 
         self.mult = self.add_weight(name='mult-kernel',
                                     shape=mult_shape,
@@ -1579,7 +1580,7 @@ class LocalCrossLinear(Layer):
             if self.bias_initializer is None:
                 mean = 1 / input_shape[-1]
                 stddev = 0.01
-                self.bias_initializer = tf.keras.initializers.RandomNormal(mean=mean, stddev=stddev)
+                self.bias_initializer = keras.initializers.RandomNormal(mean=mean, stddev=stddev)
 
             bias_shape = [1] + list(input_shape)[1:-1] + [self.output_features]
             self.bias = self.add_weight(name='bias-kernel',
@@ -1646,7 +1647,7 @@ class LocalCrossLinearTrf(Layer):
         if self.mult_initializer is None:
             mean = 1 / input_shape[-1]
             stddev = 0.01
-            self.mult_initializer = tf.keras.initializers.RandomNormal(mean=mean, stddev=stddev)
+            self.mult_initializer = keras.initializers.RandomNormal(mean=mean, stddev=stddev)
 
         self.mult = self.add_weight(name='mult-kernel',
                                     shape=mult_shape,
@@ -1656,7 +1657,7 @@ class LocalCrossLinearTrf(Layer):
 
         self.trf = self.add_weight(name='def-kernel',
                                    shape=mult_shape + [ndims],
-                                   initializer=tf.keras.initializers.RandomNormal(
+                                   initializer=keras.initializers.RandomNormal(
                                        mean=0, stddev=0.001),
                                    trainable=True)
 
@@ -1664,7 +1665,7 @@ class LocalCrossLinearTrf(Layer):
             if self.bias_initializer is None:
                 mean = 1 / input_shape[-1]
                 stddev = 0.01
-                self.bias_initializer = tf.keras.initializers.RandomNormal(mean=mean, stddev=stddev)
+                self.bias_initializer = keras.initializers.RandomNormal(mean=mean, stddev=stddev)
 
             bias_shape = list(input_shape)[1:-1] + [self.output_features]
             self.bias = self.add_weight(name='bias-kernel',
@@ -2403,7 +2404,7 @@ class GaussianNoise(Layer):
         return noise if self.noise_only else x + noise
 
 
-class PerlinNoise(tf.keras.layers.Layer):
+class PerlinNoise(keras.layers.Layer):
     """
     Sample Perlin Noise.
 
@@ -2559,7 +2560,7 @@ class HyperConv(Layer):
             raise ValueError('Causal padding is not supported for HyperConv')
 
         self.dilation_rate = conv_utils.normalize_tuple(dilation_rate, rank, 'dilation_rate')
-        self.activation = tf.keras.activations.get(activation)
+        self.activation = keras.activations.get(activation)
         self.use_bias = use_bias
 
     def build(self, input_shape):
@@ -2640,7 +2641,7 @@ class HyperConv(Layer):
             'strides': self.strides,
             'padding': self.padding,
             'dilation_rate': self.dilation_rate,
-            'activation': tf.keras.activations.serialize(self.activation),
+            'activation': keras.activations.serialize(self.activation),
             'use_bias': self.use_bias,
         }
         base_config = super().get_config()
@@ -2700,8 +2701,8 @@ class HyperConvFromDense(HyperConv):
         super().__init__(rank, filters, kernel_size, name=name, **kwargs)
         self.hyperkernel_use_bias = hyperkernel_use_bias
         self.hyperbias_use_bias = hyperbias_use_bias
-        self.hyperkernel_activation = tf.keras.activations.get(hyperkernel_activation)
-        self.hyperbias_activation = tf.keras.activations.get(hyperbias_activation)
+        self.hyperkernel_activation = keras.activations.get(hyperkernel_activation)
+        self.hyperbias_activation = keras.activations.get(hyperbias_activation)
 
     def build(self, input_shape):
         """
@@ -2797,8 +2798,8 @@ class HyperConvFromDense(HyperConv):
         config = {
             'hyperkernel_use_bias': self.hyperkernel_use_bias,
             'hyperbias_use_bias': self.hyperbias_use_bias,
-            'hyperkernel_activation': tf.keras.activations.serialize(self.hyperkernel_activation),
-            'hyperbias_activation': tf.keras.activations.serialize(self.hyperbias_activation)
+            'hyperkernel_activation': keras.activations.serialize(self.hyperkernel_activation),
+            'hyperbias_activation': keras.activations.serialize(self.hyperbias_activation)
         }
         base_config = super().get_config()
         return dict(list(base_config.items()) + list(config.items()))
@@ -2848,7 +2849,7 @@ class HyperDense(Layer):
         # TODO: units doesn't actually need to be specified as it can be
         # determined by the input kernel size
         self.units = int(units) if not isinstance(units, int) else units
-        self.activation = tf.keras.activations.get(activation)
+        self.activation = keras.activations.get(activation)
         self.use_bias = use_bias
         self.supports_masking = True
 
@@ -2897,7 +2898,7 @@ class HyperDense(Layer):
         config = super().get_config()
         config.update({
             'units': self.units,
-            'activation': tf.keras.activations.serialize(self.activation),
+            'activation': keras.activations.serialize(self.activation),
             'use_bias': self.use_bias
         })
         return config
@@ -2931,8 +2932,8 @@ class HyperDenseFromDense(HyperDense):
         super().__init__(units, **kwargs)
         self.hyperkernel_use_bias = hyperkernel_use_bias
         self.hyperbias_use_bias = hyperbias_use_bias
-        self.hyperkernel_activation = tf.keras.activations.get(hyperkernel_activation)
-        self.hyperbias_activation = tf.keras.activations.get(hyperbias_activation)
+        self.hyperkernel_activation = keras.activations.get(hyperkernel_activation)
+        self.hyperbias_activation = keras.activations.get(hyperbias_activation)
 
     def build(self, input_shape):
         """
@@ -3026,8 +3027,8 @@ class HyperDenseFromDense(HyperDense):
         config = {
             'hyperkernel_use_bias': self.hyperkernel_use_bias,
             'hyperbias_use_bias': self.hyperbias_use_bias,
-            'hyperkernel_activation': tf.keras.activations.serialize(self.hyperkernel_activation),
-            'hyperbias_activation': tf.keras.activations.serialize(self.hyperbias_activation)
+            'hyperkernel_activation': keras.activations.serialize(self.hyperkernel_activation),
+            'hyperbias_activation': keras.activations.serialize(self.hyperbias_activation)
         }
         base_config = super().get_config()
         return dict(list(base_config.items()) + list(config.items()))

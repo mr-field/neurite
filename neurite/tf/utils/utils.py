@@ -27,8 +27,8 @@ import itertools
 import os
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
-import tensorflow.keras.backend as K
+import keras.backend as K
+import keras
 
 # local imports
 import pystrum.pynd.ndutils as nd
@@ -58,7 +58,7 @@ def setup_device(gpuid=None):
             config = tf.ConfigProto()
             config.gpu_options.allow_growth = True
             config.allow_soft_placement = True
-            tf.keras.backend.set_session(tf.Session(config=config))
+            keras.backend.set_session(tf.Session(config=config))
         else:
             tf.config.set_soft_device_placement(True)
             for pd in tf.config.list_physical_devices('GPU'):
