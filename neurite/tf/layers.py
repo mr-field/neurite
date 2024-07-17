@@ -35,6 +35,8 @@ from keras.layers import Layer, InputLayer, Input, InputSpec
 # keras internal utils
 from tensorflow.python.keras.utils import conv_utils
 from tensorflow.python.keras.utils import tf_utils
+from tensorflow.python.keras.engine import base_layer
+from tensorflow.python.keras.engine.base_layer_v1 import KerasHistory
 
 # tensorflow ops (direct import required)
 from tensorflow.python.ops import nn_ops
@@ -669,7 +671,7 @@ class SpatiallySparse_Dense(Layer):
 
         M = K.reshape(self.kernel, [-1, self.output_len])  # D x d
         mt = K.transpose(M)  # d x D
-        mtm_inv = tf.matrix_inverse(K.dot(mt, M))  # d x d
+        mtm_inv = tf.linalg.inv(K.dot(mt, M))  # d x d
         self.W = K.dot(mtm_inv, mt)  # d x D
 
         if self.use_bias:
@@ -707,7 +709,7 @@ class SpatiallySparse_Dense(Layer):
             Wo = K.permute_dimensions(w_tmp, [0, 2, 1]) * \
                 K.expand_dims(y_mask_flat, -1)  # N x D x d
             WoT = K.permute_dimensions(Wo, [0, 2, 1])    # N x d x D
-            WotWo_inv = tf.matrix_inverse(K.batch_dot(WoT, Wo))  # N x d x d
+            WotWo_inv = tf.linalg.inv(K.batch_dot(WoT, Wo))  # N x d x d
             pre = K.batch_dot(WotWo_inv, WoT)  # N x d x D
             res = K.batch_dot(pre, y_flat)  # N x d
 
@@ -1762,7 +1764,7 @@ class LocalParamLayer(Layer):
         output_tensor = K.expand_dims(self.kernel, 0) * self.mult
         output_tensor._keras_shape = self.shape
         output_tensor._uses_learning_phase = False
-        output_tensor._keras_history = tf.python.keras.engine.base_layer.KerasHistory(self, 0, 0)
+        output_tensor._keras_history = KerasHistory(self, 0, 0)
         output_tensor._batch_input_shape = self.shape
 
         self.trainable = True
@@ -1770,16 +1772,16 @@ class LocalParamLayer(Layer):
         self.is_placeholder = False
 
         # create new node
-        tf.python.keras.engine.base_layer.node_module.Node(self,
-                                                           inbound_layers=[],
-                                                           node_indices=[],
-                                                           tensor_indices=[],
-                                                           input_tensors=[],
-                                                           output_tensors=[output_tensor],
-                                                           input_masks=[],
-                                                           output_masks=[None],
-                                                           input_shapes=[],
-                                                           output_shapes=self.shape)
+        base_layer.node_module.Node(self,
+                                    inbound_layers=[],
+                                    node_indices=[],
+                                    tensor_indices=[],
+                                    input_tensors=[],
+                                    output_tensors=[output_tensor],
+                                    input_masks=[],
+                                    output_masks=[None],
+                                    input_shapes=[],
+                                    output_shapes=self.shape)
 
     def get_config(self):
         config = {

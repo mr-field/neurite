@@ -107,8 +107,8 @@ def z_effect(model, gen, z_layer_name, nb_samples=100, do_plot=False, tqdm=tqdm)
     assert len(gradients) == 1, "wrong gradients"
 
     # would be nice to be able to do this with K.eval() as opposed to explicit tensorflow sessions.
-    with tf.Session() as sess:
-        sess.run(tf.initialize_all_variables())
+    with tf.compat.v1.Session() as sess:
+        sess.run(tf.compat.v1.initialize_all_variables())
 
         evaluated_gradients = [None] * nb_samples
         for i in tqdm(range(nb_samples)):
