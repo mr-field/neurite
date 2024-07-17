@@ -27,7 +27,7 @@ import warnings
 
 # third party imports
 import keras
-import keras.backend as K
+from keras import backend as K
 import numpy as np
 import matplotlib.pyplot as plt
 

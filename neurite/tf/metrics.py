@@ -26,10 +26,8 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-import keras.backend as K
-
-from keras.losses import CategoricalCrossentropy as cc
-from keras.losses import MeanSquaredError
+import keras
+from keras import backend as K
 
 # local
 import neurite as ne
@@ -613,7 +611,7 @@ class HardDice(Dice):
                          normalize=normalize)
 
 
-class CategoricalCrossentropy(cc):
+class CategoricalCrossentropy(keras.losses.CategoricalCrossentropy):
 
     def __init__(self, label_weights=None, **kwargs):
         """
@@ -647,7 +645,7 @@ class CategoricalCrossentropy(cc):
         return super().__call__(y_true, y_pred, sample_weight=sample_weight)
 
 
-class MeanSquaredErrorProb(MeanSquaredError):
+class MeanSquaredErrorProb(keras.losses.MeanSquaredError):
 
     def __init__(self, label_weights=None, **kwargs):
         """

@@ -30,7 +30,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 from keras import backend as K
-from keras.layers import Layer, InputLayer, Input, InputSpec
+from keras import Layer
 
 # keras internal utils
 from tensorflow.python.keras.utils import conv_utils

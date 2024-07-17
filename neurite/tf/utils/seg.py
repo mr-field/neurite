@@ -27,7 +27,7 @@ import numpy as np
 from tqdm import tqdm_notebook as tqdm
 from pprint import pformat
 import tensorflow as tf
-import keras.backend as K
+from keras import backend as K
 
 # local imports
 import neurite as ne

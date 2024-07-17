@@ -34,7 +34,7 @@ import tensorflow as tf
 from keras import backend as K
 from tqdm import tqdm as tqdm
 from keras import layers as KL
-from keras.utils import plot_model
+from keras import utils
 from keras import Model
 import matplotlib.pyplot as plt
 
@@ -71,7 +71,7 @@ def extract_z_dec(model, sample_layer_name, vis=False, wt_chk=False):
 
     if vis:
         outfile = NamedTemporaryFile().name + '.png'
-        plot_model(z_dec_model, to_file=outfile, show_shapes=True)
+        utils.plot_model(z_dec_model, to_file=outfile, show_shapes=True)
 
         from IPython.display import Image
         Image(outfile, width=100)
