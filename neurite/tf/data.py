@@ -5,7 +5,7 @@ data resources for neurite.
 # third party
 import numpy as np
 import scipy
-from keras import datasets
+from tf_keras import datasets
 from tqdm import tqdm
 
 # local

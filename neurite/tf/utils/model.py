@@ -27,7 +27,7 @@ from tempfile import NamedTemporaryFile
 # third party imports
 import numpy as np
 from tqdm import tqdm_notebook as tqdm
-import keras
+import tf_keras as keras
 
 
 def stack_models(models, connecting_node_ids=None):

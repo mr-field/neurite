@@ -27,8 +27,8 @@ import itertools
 import os
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
-import keras
+from tf_keras import backend as K
+import tf_keras as keras
 
 # local imports
 import pystrum.pynd.ndutils as nd

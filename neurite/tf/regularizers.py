@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 """
 
 import tensorflow as tf
-from keras import backend as K
+from tf_keras import backend as K
 
 from .utils import soft_delta
 

@@ -31,11 +31,11 @@ try:
 except Exception as e:
     warnings.warn(str(e))  # avoiding https://github.com/scikit-learn/scikit-learn/issues/14485
 import tensorflow as tf
-from keras import backend as K
+from tf_keras import backend as K
 from tqdm import tqdm as tqdm
-from keras import layers as KL
-from keras import utils
-from keras import Model
+from tf_keras import layers as KL
+from tf_keras import utils
+from tf_keras import Model
 import matplotlib.pyplot as plt
 
 # project imports
@@ -44,7 +44,7 @@ import neurite as ne
 
 def extract_z_dec(model, sample_layer_name, vis=False, wt_chk=False):
     """
-    extract the z_decoder [z = p(x)] and return it as a keras model
+    extract the z_decoder [z = p(x)] and return it as a tf_keras model
 
     Example Layer name:
     sample_layer_name = 'img-img-dense-vae_ae_dense_sample'

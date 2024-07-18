@@ -28,9 +28,9 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-import keras
-from keras import backend as K
-from keras import Layer
+import tf_keras as keras
+from tf_keras import backend as K
+from tf_keras.layers import Layer
 
 # keras internal utils
 from tensorflow.python.keras.utils import conv_utils

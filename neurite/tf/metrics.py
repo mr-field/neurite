@@ -26,8 +26,8 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-import keras
-from keras import backend as K
+import tf_keras as keras
+from tf_keras import backend as K
 
 # local
 import neurite as ne

@@ -1,4 +1,4 @@
-import keras
+import tf_keras as keras
 import h5py
 import json
 import inspect

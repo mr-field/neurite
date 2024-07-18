@@ -27,10 +27,10 @@ import warnings
 # third party
 import numpy as np
 import tensorflow as tf
-import keras
-from keras import layers as KL
-from keras import Model
-from keras import backend as K
+import tf_keras as keras
+from tf_keras import layers as KL
+from tf_keras import Model
+from tf_keras import backend as K
 from tensorflow.python.keras.constraints import maxnorm
 
 # local
